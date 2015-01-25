@@ -101,7 +101,7 @@ class RandomPlayer(BasePlayer):
 def main():
     player1 = HumanPlayer(0, 1, 2)
     player2 = RandomPlayer(0, 2, 1)
-
+    
     game = Connect4Game(player1, player2)
     game.play()
 
