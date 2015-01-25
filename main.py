@@ -3,11 +3,11 @@ from copy import copy
 from abc import ABCMeta, abstractmethod
 
 class Connect4Game():
-    def __init__(self, player1,player2):
+    def __init__(self, player1, player2):
         self.player1 = player1
         self.player2 = player2
-        self.player_names = {player1: player1, player2: player2}
-        self.board = np.zeros((6,7), dtype=np.int8)
+        self.player_names = {player1 : "Player1", player2 : "Player2"}
+        self.board = np.zeros((6, 7), dtype=np.int8)
         self.turn = player1
         self.last_move = ()
         self.winner = None
@@ -17,6 +17,7 @@ class Connect4Game():
             return False
 
         rind, cind = self.last_move
+
         row = self.board[rind, :]
         col = self.board[:, cind]
         diag1 = np.diagonal(self.board, cind - rind)
@@ -33,8 +34,10 @@ class Connect4Game():
                 elif sum(four == 2) == 4:
                     self.winner = self.player2
                     return True
+
         if sum(self.board[0] == 0) == 0:
             return True
+
         return False
 
     def move(self, cind):
@@ -47,25 +50,30 @@ class Connect4Game():
             self.turn = self.player2
         else:
             self.board[free_index, cind] = 2
-            self.turn = player1
+            self.turn = self.player1
 
         self.last_move = (free_index, cind)
+        return True
 
     def play(self):
         while not self.gameover():
             print(self.board)
-            print(self.player_name[self.turn]+"'s, turn.")
+            print(self.player_names[self.turn]+"'s turn.")
+
             self.move(self.turn.get_move(copy(self.board)))
+
         print(self.board)
 
-    if self.winner is self.player1:
-        print("winner: player1")
-    elif self.winner is self.player2:
-        print("winner: player2")
-    else:
-        print("Tie")
+        if self.winner is self.player1:
+            print("Winner: player1")
+        elif self.winner is self.player2:
+            print("Winner: player2")
+        else:
+            print("Tie")
 
-class BasePlayer(metaclass=ABCMeta):
+class BasePlayer(object):
+    __metaclass__ = ABCMeta
+      
     @abstractmethod
     def __init__(self, empty, me, opponent):
         pass
@@ -79,7 +87,7 @@ class HumanPlayer(BasePlayer):
         pass
 
     def get_move(self, board):
-        col = input("Your move, choose a number 0-6: ")
+        col = input("Your move (0-6): ")
         return int(col)
 
 class RandomPlayer(BasePlayer):
@@ -93,11 +101,9 @@ class RandomPlayer(BasePlayer):
 def main():
     player1 = HumanPlayer(0, 1, 2)
     player2 = RandomPlayer(0, 2, 1)
+
     game = Connect4Game(player1, player2)
     game.play()
 
 if __name__ == "__main__":
     main()
-    
-        
-        
